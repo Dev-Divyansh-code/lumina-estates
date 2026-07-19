@@ -1,0 +1,604 @@
+/* Grey + silver color-only hero — Nova-style white rim frame */
+
+.nova-hero {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  /*
+   * Mobile: shorter hero (~72svh) so it doesn’t look blank.
+   * Desktop: full viewport.
+   * Use svh only — avoids stretch when browser chrome shows/hides.
+   */
+  min-height: min(72svh, 560px);
+  height: min(72svh, 560px);
+  max-height: min(72svh, 560px);
+  overflow: hidden;
+  /* Shared white-rim frame tokens */
+  padding:
+    max(var(--frame-pad), var(--safe-top))
+    max(var(--frame-pad), var(--safe-right))
+    var(--frame-pad)
+    max(var(--frame-pad), var(--safe-left));
+  box-sizing: border-box;
+  background: #ffffff;
+  transition: background 0.35s ease;
+}
+
+@media (min-width: 480px) and (max-width: 767px) {
+  .nova-hero {
+    min-height: min(76svh, 620px);
+    height: min(76svh, 620px);
+    max-height: min(76svh, 620px);
+  }
+}
+
+@media (min-width: 768px) {
+  .nova-hero {
+    min-height: 100svh;
+    height: 100svh;
+    max-height: 100svh;
+  }
+}
+
+/* Rounded inner panel — hero content lives here */
+.nova-hero__panel {
+  position: relative;
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  height: 100%;
+  max-height: 100%;
+  width: 100%;
+  border-radius: var(--frame-radius);
+  overflow: hidden;
+  background: #0A0A0B;
+  border: 1px solid rgb(255 255 255 / 0.14);
+  box-shadow:
+    0 0 0 1px rgb(255 255 255 / 0.06) inset,
+    0 18px 48px rgb(10 10 11 / 0.28);
+  transition: background 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease;
+  /* Contain GSAP scale/translate so nothing “grows” the section */
+  contain: layout paint;
+}
+
+/* Architectural photo — double layer (soft blur base + clearer photo) */
+.nova-hero__media {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.nova-hero__media-img {
+  position: absolute;
+  inset: -5%;
+  width: 110%;
+  height: 110%;
+  object-fit: cover;
+  object-position: center 40%;
+  transform: scale(1.02);
+}
+
+/* Layer 1: soft blurred ambient (depth) */
+.nova-hero__media-img--blur {
+  filter: blur(18px) brightness(0.55) saturate(0.7) contrast(1.05);
+  opacity: 0.85;
+  transform: scale(1.12);
+  animation: none;
+}
+
+/* Layer 2: sharper photo — more visible, not crushed grey */
+.nova-hero__media-img--sharp {
+  /* Mild cool grade only — architecture stays readable */
+  filter: grayscale(0.18) contrast(1.06) brightness(0.72) saturate(0.75);
+  opacity: 0.92;
+  mask-image: radial-gradient(
+    ellipse 88% 78% at 50% 42%,
+    #000 0%,
+    #000 42%,
+    rgba(0, 0, 0, 0.75) 68%,
+    transparent 100%
+  );
+  -webkit-mask-image: radial-gradient(
+    ellipse 88% 78% at 50% 42%,
+    #000 0%,
+    #000 42%,
+    rgba(0, 0, 0, 0.75) 68%,
+    transparent 100%
+  );
+  animation: hero-media-drift 32s ease-in-out infinite alternate;
+}
+
+/* Soft edge fade only — not a heavy grey wash */
+.nova-hero__media-shade {
+  position: absolute;
+  inset: 0;
+  background:
+    /* Clear center so photo shows; gentle vignette at edges */
+    radial-gradient(
+      ellipse 80% 70% at 50% 40%,
+      transparent 0%,
+      transparent 38%,
+      rgb(10 10 11 / 0.28) 72%,
+      rgb(10 10 11 / 0.72) 100%
+    ),
+    /* Bottom/top fade for brand + search readability */
+    linear-gradient(
+      180deg,
+      rgb(10 10 11 / 0.42) 0%,
+      rgb(10 10 11 / 0.12) 28%,
+      rgb(10 10 11 / 0.08) 48%,
+      rgb(10 10 11 / 0.35) 72%,
+      rgb(10 10 11 / 0.78) 100%
+    );
+}
+
+.nova-hero__media-grain {
+  position: absolute;
+  inset: 0;
+  opacity: 0.045;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E");
+  background-size: 180px 180px;
+}
+
+@keyframes hero-media-drift {
+  0% {
+    transform: scale(1.02) translate3d(0, 0, 0);
+  }
+  100% {
+    transform: scale(1.05) translate3d(-0.9%, -0.5%, 0);
+  }
+}
+
+.nova-hero__glow {
+  position: absolute;
+  inset: -8%;
+  pointer-events: none;
+  z-index: 0;
+  will-change: transform;
+  transform-origin: center center;
+  /* Light silver atmosphere — doesn’t flatten the photo */
+  background:
+    radial-gradient(ellipse 55% 40% at 18% 20%, rgb(197 202 211 / 0.1) 0%, transparent 55%),
+    radial-gradient(ellipse 50% 35% at 90% 75%, rgb(61 65 73 / 0.2) 0%, transparent 50%),
+    radial-gradient(ellipse 100% 30% at 50% 100%, rgb(10 10 11 / 0.35) 0%, transparent 55%);
+  transition: opacity 0.35s ease;
+}
+
+/* Light theme: airy double-layer, still shows architecture */
+html.light .nova-hero__panel {
+  background: #e4e7ec;
+  border: 1.5px solid rgb(255 255 255 / 0.95);
+  box-shadow:
+    0 0 0 1px rgb(107 114 128 / 0.08),
+    0 20px 50px rgb(61 65 73 / 0.08),
+    inset 0 1px 0 rgb(255 255 255 / 0.9);
+}
+
+html.light .nova-hero__media-img--blur {
+  filter: blur(16px) brightness(0.95) saturate(0.65);
+  opacity: 0.75;
+}
+
+html.light .nova-hero__media-img--sharp {
+  filter: grayscale(0.12) contrast(1.04) brightness(0.95) saturate(0.7);
+  opacity: 0.88;
+}
+
+html.light .nova-hero__media-shade {
+  background:
+    radial-gradient(
+      ellipse 82% 72% at 50% 40%,
+      transparent 0%,
+      transparent 40%,
+      rgb(232 234 238 / 0.25) 70%,
+      rgb(228 230 234 / 0.7) 100%
+    ),
+    linear-gradient(
+      180deg,
+      rgb(238 240 243 / 0.45) 0%,
+      rgb(232 234 238 / 0.12) 30%,
+      rgb(232 234 238 / 0.1) 50%,
+      rgb(228 230 234 / 0.4) 78%,
+      rgb(221 225 231 / 0.78) 100%
+    );
+}
+
+html.light .nova-hero__media-grain {
+  opacity: 0.03;
+  mix-blend-mode: multiply;
+}
+
+html.light .nova-hero__glow {
+  background:
+    radial-gradient(ellipse 55% 40% at 18% 18%, rgb(255 255 255 / 0.35) 0%, transparent 55%),
+    radial-gradient(ellipse 50% 35% at 88% 78%, rgb(197 202 211 / 0.2) 0%, transparent 50%),
+    radial-gradient(ellipse 100% 30% at 50% 100%, rgb(221 225 231 / 0.35) 0%, transparent 55%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nova-hero__media-img--sharp {
+    animation: none;
+  }
+}
+
+html.light .nova-search {
+  background: linear-gradient(180deg, #fafbfc 0%, #eef0f3 100%);
+  border: 1px solid rgb(107 114 128 / 0.2);
+  box-shadow: 0 16px 40px rgb(61 65 73 / 0.1);
+}
+
+html.light .nova-search__label {
+  color: #5c6570;
+}
+
+html.light .nova-search__control {
+  border: 1px solid rgb(107 114 128 / 0.22);
+  background: rgb(255 255 255 / 0.88);
+  color: #1a1d22;
+}
+
+html.light .nova-search__control option {
+  background: #f0f2f5;
+  color: #1a1d22;
+}
+
+html.light .nova-search__control::placeholder {
+  color: rgb(107 114 128 / 0.55);
+}
+
+html.light .nova-search__control:focus {
+  border-color: rgb(92 101 112 / 0.5);
+  background: #fff;
+}
+
+html.light .nova-search__submit {
+  background: linear-gradient(135deg, #4a505a 0%, #3d4149 50%, #2a2d33 100%);
+  color: #f0f1f3;
+}
+
+html.light .nova-search__field:not(:first-child) {
+  border-left-color: rgb(107 114 128 / 0.18);
+}
+
+.nova-hero__grid {
+  display: none;
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.035;
+  background-image:
+    linear-gradient(to right, #C5CAD3 1px, transparent 1px),
+    linear-gradient(to bottom, #3D4149 1px, transparent 1px);
+  background-size: 64px 64px;
+  mask-image: radial-gradient(ellipse 70% 60% at 50% 45%, black 20%, transparent 75%);
+}
+
+@media (min-width: 768px) {
+  .nova-hero__grid {
+    display: block;
+  }
+}
+
+/*
+ * Headline stack sits under the 3D word so LUMINA owns the upper field
+ * and copy reads as the supporting layer.
+ */
+.nova-hero__inner {
+  position: relative;
+  z-index: 2;
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  /* Pack brand + copy tighter on mobile */
+  justify-content: flex-end;
+  align-items: center;
+  will-change: transform, opacity;
+  padding:
+    max(4.5rem, calc(var(--safe-top) + 3.5rem))
+    1rem
+    clamp(1.75rem, 5vw, 2.5rem);
+  text-align: center;
+  gap: 0.15rem;
+}
+
+@media (min-width: 480px) {
+  .nova-hero__inner {
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .nova-hero__inner {
+    /* Desktop: room for brand + bottom search */
+    justify-content: flex-end;
+    padding: 6.5rem 2rem clamp(11rem, 22vh, 13.5rem);
+    gap: 0;
+  }
+}
+
+.nova-hero__eyebrow {
+  margin: 0 0 0.55rem;
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: rgb(197 202 211 / 0.85);
+}
+
+@media (min-width: 640px) {
+  .nova-hero__eyebrow {
+    margin-bottom: 0.7rem;
+    font-size: 0.68rem;
+    letter-spacing: 0.3em;
+  }
+}
+
+html.light .nova-hero__eyebrow {
+  color: #5c6570;
+}
+
+/* Supporting headline — secondary to brand word */
+.nova-hero__title {
+  margin: 0;
+  font-family: 'Playfair Display', Georgia, serif;
+  font-weight: 500;
+  font-size: clamp(1.45rem, 5vw, 2.35rem);
+  line-height: 1.08;
+  letter-spacing: -0.025em;
+  color: #f0f1f3;
+  max-width: 16ch;
+  text-shadow: 0 2px 24px rgb(0 0 0 / 0.35);
+}
+
+@media (min-width: 640px) {
+  .nova-hero__title {
+    max-width: 18ch;
+    font-size: clamp(1.75rem, 3.8vw, 3.15rem);
+  }
+}
+
+@media (min-width: 768px) {
+  .nova-hero__title {
+    font-size: clamp(1.9rem, 4vw, 3.35rem);
+  }
+}
+
+.nova-hero__title em {
+  font-style: italic;
+  font-weight: 400;
+  background: linear-gradient(135deg, #c5cad3 0%, #e8eaee 42%, #9aa1ad 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+html.light .nova-hero__title {
+  color: #1a1d22;
+  text-shadow: none;
+}
+
+html.light .nova-hero__title em {
+  background: linear-gradient(135deg, #2a2d33 0%, #5c6570 50%, #9aa1ad 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+.nova-hero__tag {
+  margin: 0.65rem 0 0;
+  max-width: 22rem;
+  padding: 0 0.15rem;
+  font-size: 0.82rem;
+  line-height: 1.55;
+  color: rgb(232 234 238 / 0.62);
+  font-weight: 400;
+  letter-spacing: 0.01em;
+}
+
+@media (min-width: 640px) {
+  .nova-hero__tag {
+    margin-top: 0.8rem;
+    max-width: 26rem;
+    font-size: 0.92rem;
+    line-height: 1.6;
+  }
+}
+
+html.light .nova-hero__tag {
+  color: rgb(61 65 73 / 0.78);
+}
+
+/* Bottom search — desktop only (mobile uses nav search icon) */
+.nova-search-wrap {
+  display: none;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: max(1.15rem, env(safe-area-inset-bottom, 0px));
+  z-index: 2;
+  justify-content: center;
+  padding: 0 0.75rem;
+  pointer-events: none;
+}
+
+@media (min-width: 768px) {
+  .nova-search-wrap {
+    display: flex;
+    bottom: 1.75rem;
+    padding: 0 1rem;
+  }
+}
+
+.nova-search {
+  pointer-events: auto;
+  position: relative;
+  width: 100%;
+  max-width: 960px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.55rem 0.5rem;
+  padding: 0.75rem;
+  border-radius: 1rem;
+  background: rgb(18 19 22 / 0.92);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgb(197 202 211 / 0.16);
+  box-shadow: 0 16px 40px rgb(0 0 0 / 0.4);
+}
+
+.nova-search__field--query,
+.nova-search__field--location,
+.nova-search__submit {
+  grid-column: 1 / -1;
+}
+
+@media (min-width: 768px) {
+  .nova-search {
+    grid-template-columns: 1.15fr 1fr 1fr 1fr auto;
+    align-items: end;
+    gap: 0.4rem;
+    padding: 0.85rem 0.85rem 0.85rem 1rem;
+    border-radius: 1.25rem;
+  }
+
+  .nova-search__field--query,
+  .nova-search__field--location,
+  .nova-search__submit {
+    grid-column: auto;
+  }
+
+  .nova-search__field:not(:first-child) {
+    border-left: 1px solid rgb(255 255 255 / 0.06);
+    padding-left: 0.7rem;
+  }
+}
+
+.nova-search__field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  min-width: 0;
+  text-align: left;
+}
+
+.nova-search__label {
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgb(197 202 211 / 0.85);
+  padding-left: 0.1rem;
+}
+
+@media (min-width: 768px) {
+  .nova-search__label {
+    font-size: 0.65rem;
+    letter-spacing: 0.12em;
+  }
+}
+
+.nova-search__control {
+  width: 100%;
+  height: 2.75rem;
+  min-height: 2.75rem;
+  padding: 0 0.75rem;
+  border-radius: 0.5rem;
+  border: 1px solid rgb(255 255 255 / 0.08);
+  background: rgb(255 255 255 / 0.04);
+  color: #F0F1F3;
+  font-size: 16px;
+  outline: none;
+  transition: border-color 0.2s ease, background 0.2s ease;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+@media (min-width: 768px) {
+  .nova-search__control {
+    height: 2.65rem;
+    font-size: 0.875rem;
+    padding: 0 0.85rem;
+  }
+}
+
+.nova-search__control option {
+  background: #121316;
+  color: #F0F1F3;
+}
+
+.nova-search__control::placeholder {
+  color: rgb(240 241 243 / 0.35);
+}
+
+.nova-search__control:focus {
+  border-color: rgb(197 202 211 / 0.4);
+  background: rgb(255 255 255 / 0.06);
+}
+
+.nova-search__submit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  height: 2.85rem;
+  min-height: 2.85rem;
+  padding: 0 1.15rem;
+  border: none;
+  border-radius: 0.55rem;
+  background: linear-gradient(135deg, #E8EAEE 0%, #C5CAD3 50%, #9AA1AD 100%);
+  color: #0A0A0B;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  transition: filter 0.2s ease, transform 0.2s ease;
+  cursor: pointer;
+  width: 100%;
+}
+
+@media (min-width: 768px) {
+  .nova-search__submit {
+    height: 2.75rem;
+    min-height: 2.75rem;
+    width: auto;
+    min-width: 7.25rem;
+    align-self: end;
+    border-radius: 0.65rem;
+    font-size: 0.85rem;
+  }
+
+  .nova-search__submit:hover {
+    filter: brightness(1.06);
+    transform: translateY(-1px);
+  }
+}
+
+@media (max-height: 700px) and (max-width: 767px) {
+  .nova-hero {
+    min-height: min(68svh, 480px);
+    height: min(68svh, 480px);
+    max-height: min(68svh, 480px);
+  }
+
+  .nova-hero__inner {
+    padding-top: max(4.25rem, calc(var(--safe-top) + 3.25rem));
+    padding-bottom: 1.5rem;
+    justify-content: flex-end;
+  }
+
+  .nova-hero__title {
+    font-size: clamp(1.35rem, 5.5vw, 1.85rem);
+  }
+
+  .nova-hero__tag {
+    margin-top: 0.4rem;
+    font-size: 0.75rem;
+  }
+}

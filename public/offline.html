@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#0A0A0B" />
+    <title>Connection lost · Lumina Estates</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        --cream: #f0f1f3;
+        --muted: rgba(240, 241, 243, 0.55);
+        --line: rgba(197, 202, 211, 0.18);
+        --bg: #0a0a0b;
+        --panel: #121316;
+        --silver: #c5cad3;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        min-height: 100%;
+        background: var(--bg);
+        color: var(--cream);
+        font-family: Inter, system-ui, sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+      body {
+        min-height: 100svh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: max(1rem, env(safe-area-inset-top)) max(1rem, env(safe-area-inset-right))
+          max(1rem, env(safe-area-inset-bottom)) max(1rem, env(safe-area-inset-left));
+        background-image: radial-gradient(
+          ellipse 90% 50% at 50% -10%,
+          rgba(61, 65, 73, 0.5),
+          transparent 55%
+        );
+      }
+      .shell {
+        width: 100%;
+        max-width: 520px;
+        padding: 0.65rem;
+        background: #fff;
+        border-radius: 1.35rem;
+      }
+      .panel {
+        background: var(--panel);
+        border-radius: 1.1rem;
+        border: 1px solid var(--line);
+        padding: clamp(2rem, 6vw, 3rem) clamp(1.25rem, 4vw, 2rem);
+        text-align: center;
+      }
+      .icon {
+        width: 3.75rem;
+        height: 3.75rem;
+        margin: 0 auto 1.5rem;
+        border-radius: 999px;
+        border: 1px solid var(--line);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--silver);
+      }
+      .label {
+        font-size: 0.65rem;
+        letter-spacing: 0.28em;
+        text-transform: uppercase;
+        color: rgba(197, 202, 211, 0.75);
+        margin: 0 0 0.85rem;
+      }
+      h1 {
+        font-family: Georgia, 'Times New Roman', serif;
+        font-weight: 500;
+        font-size: clamp(1.75rem, 5vw, 2.35rem);
+        letter-spacing: -0.03em;
+        margin: 0 0 0.85rem;
+      }
+      p {
+        margin: 0 auto 1.75rem;
+        max-width: 22rem;
+        font-size: 0.95rem;
+        line-height: 1.6;
+        color: var(--muted);
+      }
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.65rem;
+        justify-content: center;
+      }
+      button,
+      a.btn {
+        appearance: none;
+        border: none;
+        cursor: pointer;
+        font: inherit;
+        font-size: 0.72rem;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        text-decoration: none;
+        padding: 0.9rem 1.35rem;
+        border-radius: 0.35rem;
+        min-width: 9.5rem;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.4rem;
+      }
+      .primary {
+        color: #0a0a0b;
+        background: linear-gradient(135deg, #e8eaee, #c5cad3 50%, #9aa1ad);
+      }
+      .outline {
+        color: var(--silver);
+        background: transparent;
+        border: 1px solid rgba(107, 114, 128, 0.55);
+      }
+      .brand {
+        margin-top: 2rem;
+        font-size: 0.6rem;
+        letter-spacing: 0.24em;
+        text-transform: uppercase;
+        color: rgba(240, 241, 243, 0.28);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="shell">
+      <div class="panel">
+        <div class="icon" aria-hidden="true">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M2 8.82a15 15 0 0 1 20 0" />
+            <path d="M5 12.86a10 10 0 0 1 14 0" />
+            <path d="M8.5 16.43a5 5 0 0 1 7 0" />
+            <line x1="12" y1="20" x2="12.01" y2="20" />
+            <line x1="2" y1="2" x2="22" y2="22" />
+          </svg>
+        </div>
+        <p class="label">Offline</p>
+        <h1>Connection lost</h1>
+        <p>
+          We cannot reach Lumina Estates right now. Check your network, then try again.
+        </p>
+        <div class="actions">
+          <button class="primary" type="button" onclick="location.reload()">Try again</button>
+          <a class="btn outline" href="/">Return home</a>
+        </div>
+        <p class="brand">Lumina Estates</p>
+      </div>
+    </div>
+    <script>
+      window.addEventListener('online', function () {
+        location.reload()
+      })
+    </script>
+  </body>
+</html>

@@ -1,0 +1,648 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --color-charcoal: #0A0A0B;
+    --color-cream: #F0F1F3;
+    --color-silver: #C5CAD3;
+    --color-silver-light: #E8EAEE;
+    --color-graphite: #3D4149;
+    --color-graphite-light: #6B7280;
+    --font-serif: "Playfair Display", Georgia, serif;
+    --font-sans: Inter, system-ui, sans-serif;
+    /* Full-width glass nav — offset accounts for lower bar + top margin */
+    --header-offset: 6rem;
+    --page-pad-x: clamp(0.9rem, 4vw, 7rem);
+    --section-y: clamp(2.75rem, 7vw, 8rem);
+    --safe-top: env(safe-area-inset-top, 0px);
+    --safe-bottom: env(safe-area-inset-bottom, 0px);
+    --safe-left: env(safe-area-inset-left, 0px);
+    --safe-right: env(safe-area-inset-right, 0px);
+    /* White-rim framed sections (Nova-style) */
+    --frame-pad: 0.55rem;
+    --frame-radius: 1.25rem;
+  }
+
+  @media (min-width: 640px) {
+    :root {
+      --header-offset: 5.75rem;
+    }
+  }
+
+  @media (min-width: 768px) {
+    :root {
+      --header-offset: 6.15rem;
+      --frame-pad: 0.75rem;
+      --frame-radius: 1.65rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    :root {
+      --header-offset: 6.35rem;
+      --frame-pad: 0.9rem;
+      --frame-radius: 1.85rem;
+    }
+  }
+
+  html {
+    scroll-behavior: auto;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+
+  html.lenis,
+  html.lenis body {
+    height: auto;
+  }
+
+  body {
+    @apply text-cream font-sans overflow-x-hidden;
+    font-feature-settings: "ss01", "ss02", "cv01";
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    min-height: 100dvh;
+    /* White canvas so framed section rims stay pure white */
+    background-color: #ffffff;
+    background-image: none;
+    background-attachment: scroll;
+    transition: background-color 0.35s ease, color 0.35s ease;
+  }
+
+  @media (min-width: 1024px) and (pointer: fine) {
+    body {
+      background-attachment: fixed;
+    }
+  }
+
+  /* Light CSS vars — cool gray system (slate / silver / mist) */
+  html.light {
+    --color-charcoal: #E8EAEE;
+    --color-cream: #1A1D22;
+    --color-silver: #4A5560;
+    --color-silver-light: #2F343C;
+    --color-graphite: #5C6570;
+    --color-graphite-light: #7A8490;
+    /* Extended light-gray tokens */
+    --gray-canvas: #E8EAEE;
+    --gray-mist: #F0F2F5;
+    --gray-panel: #F4F5F7;
+    --gray-panel-soft: #EBEDF1;
+    --gray-line: #C5CAD3;
+    --gray-slate: #6B7280;
+    --gray-ink: #1A1D22;
+  }
+
+  @media (pointer: fine) {
+    body,
+    a,
+    button,
+    [role="button"],
+    input,
+    textarea,
+    select,
+    label {
+      cursor: none;
+    }
+  }
+
+  ::selection {
+    background-color: rgb(107 114 128 / 0.45);
+    color: #F0F1F3;
+  }
+
+  img,
+  video {
+    max-width: 100%;
+    height: auto;
+  }
+
+  @media (pointer: coarse) {
+    button:not(.pill-nav__link):not(.pill-nav__icon-btn):not(.pill-nav__search-icon):not(.pill-nav__menu-btn),
+    a:not(.pill-nav__link):not(.pill-nav__logo),
+    [role="button"] {
+      min-height: 44px;
+    }
+
+    input,
+    select,
+    textarea {
+      font-size: 16px;
+    }
+  }
+
+  ::-webkit-scrollbar {
+    width: 5px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #0A0A0B;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #3D4149, #C5CAD3);
+    border-radius: 9999px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, #6B7280, #E8EAEE);
+  }
+}
+
+@layer components {
+  .glass {
+    @apply backdrop-blur-xl;
+    background:
+      linear-gradient(145deg, rgb(61 65 73 / 0.35) 0%, rgb(10 10 11 / 0.6) 50%, rgb(197 202 211 / 0.06) 100%);
+    border: 1px solid rgb(197 202 211 / 0.16);
+    box-shadow: inset 0 1px 0 rgb(232 234 238 / 0.08);
+  }
+
+  .glass-strong {
+    @apply backdrop-blur-2xl;
+    background: rgb(10 10 11 / 0.9);
+    border: 1px solid rgb(197 202 211 / 0.18);
+    box-shadow:
+      inset 0 1px 0 rgb(232 234 238 / 0.08),
+      0 24px 48px rgb(10 10 11 / 0.5);
+  }
+
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .heading-display {
+    @apply font-serif font-medium tracking-tighter text-cream;
+  }
+
+  /* Silver metal CTA */
+  .btn-primary {
+    @apply relative inline-flex items-center justify-center
+           font-medium tracking-wide
+           transition-all duration-500 ease-out-expo
+           active:scale-[0.98];
+    padding: 0.85rem 1.5rem;
+    font-size: 0.8125rem;
+    color: #0A0A0B;
+    background-image: linear-gradient(
+      120deg,
+      #9AA1AD 0%,
+      #E8EAEE 40%,
+      #C5CAD3 55%,
+      #9AA1AD 100%
+    );
+    background-size: 200% 100%;
+    box-shadow:
+      0 0 0 1px rgb(197 202 211 / 0.35),
+      0 8px 28px rgb(197 202 211 / 0.12),
+      inset 0 1px 0 rgb(255 255 255 / 0.45);
+  }
+
+  @media (min-width: 640px) {
+    .btn-primary {
+      padding: 0.9rem 2rem;
+      font-size: 0.875rem;
+    }
+  }
+
+  .btn-primary:hover {
+    background-position: 100% 50%;
+    box-shadow:
+      0 0 0 1px rgb(232 234 238 / 0.5),
+      0 12px 36px rgb(197 202 211 / 0.2),
+      inset 0 1px 0 rgb(255 255 255 / 0.5);
+  }
+
+  .btn-outline {
+    @apply relative inline-flex items-center justify-center
+           font-medium tracking-wide
+           transition-all duration-500 ease-out-expo
+           active:scale-[0.98];
+    padding: 0.85rem 1.5rem;
+    font-size: 0.8125rem;
+    color: #C5CAD3;
+    border: 1px solid rgb(107 114 128 / 0.55);
+    box-shadow: inset 0 0 0 1px rgb(197 202 211 / 0.08);
+    background: rgb(61 65 73 / 0.2);
+  }
+
+  @media (min-width: 640px) {
+    .btn-outline {
+      padding: 0.9rem 2rem;
+      font-size: 0.875rem;
+    }
+  }
+
+  .btn-outline:hover {
+    color: #E8EAEE;
+    border-color: #C5CAD3;
+    background: rgb(61 65 73 / 0.4);
+    box-shadow:
+      0 0 24px rgb(197 202 211 / 0.12),
+      inset 0 0 0 1px rgb(197 202 211 / 0.2);
+  }
+
+  .btn-stack {
+    @apply w-full sm:w-auto justify-center;
+  }
+
+  .label-premium {
+    @apply inline-flex items-center gap-2 sm:gap-3 text-[10px] sm:text-[11px] uppercase tracking-[0.22em] sm:tracking-[0.3em];
+    color: #9AA1AD;
+    max-width: 100%;
+  }
+
+  .label-premium::before {
+    content: "";
+    display: block;
+    width: 1rem;
+    height: 1px;
+    flex-shrink: 0;
+    background: linear-gradient(90deg, #C5CAD3, transparent);
+  }
+
+  @media (min-width: 640px) {
+    .label-premium::before {
+      width: 1.5rem;
+    }
+  }
+
+  .section-padding {
+    padding-left: max(var(--page-pad-x), var(--safe-left));
+    padding-right: max(var(--page-pad-x), var(--safe-right));
+  }
+
+  .section-y {
+    padding-top: var(--section-y);
+    padding-bottom: var(--section-y);
+  }
+
+  .container-luxury {
+    @apply w-full max-w-[1440px] mx-auto;
+  }
+
+  .page-shell {
+    padding-top: calc(var(--header-offset) + var(--safe-top));
+    padding-bottom: clamp(4rem, 10vw, 8rem);
+  }
+
+  /*
+   * Framed section — white outer rim + rounded inner panel
+   * Usage: <section class="frame-section"><div class="frame-panel">…</div></section>
+   */
+  .frame-section {
+    background: #ffffff;
+    padding-left: max(var(--frame-pad), var(--safe-left));
+    padding-right: max(var(--frame-pad), var(--safe-right));
+    padding-bottom: var(--frame-pad);
+    box-sizing: border-box;
+  }
+
+  .frame-section--top {
+    padding-top: max(var(--frame-pad), var(--safe-top));
+  }
+
+  .frame-section--flush-top {
+    padding-top: 0;
+  }
+
+  .frame-panel {
+    position: relative;
+    width: 100%;
+    border-radius: var(--frame-radius);
+    overflow: hidden;
+    background: #0a0a0b;
+    border: 1px solid rgb(255 255 255 / 0.14);
+    box-shadow:
+      0 0 0 1px rgb(255 255 255 / 0.05) inset,
+      0 14px 40px rgb(10 10 11 / 0.22);
+    transition: background 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease;
+  }
+
+  .frame-panel--soft {
+    background: #121316;
+  }
+
+  .frame-panel--tight {
+    border-radius: calc(var(--frame-radius) * 0.85);
+  }
+
+  html.light .frame-panel {
+    background:
+      linear-gradient(165deg, #f6f7f9 0%, #e8eaee 48%, #e2e5ea 100%);
+    border: 1.5px solid rgb(255 255 255 / 0.95);
+    box-shadow:
+      0 0 0 1px rgb(107 114 128 / 0.08),
+      0 16px 44px rgb(61 65 73 / 0.08),
+      inset 0 1px 0 rgb(255 255 255 / 0.92);
+  }
+
+  html.light .frame-panel--soft {
+    background:
+      linear-gradient(165deg, #f0f2f5 0%, #e4e7ec 50%, #dde1e7 100%);
+  }
+
+  .text-royal {
+    background-image: linear-gradient(135deg, #6B7280 0%, #C5CAD3 45%, #E8EAEE 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .rule-silver {
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgb(61 65 73 / 0.6) 20%,
+      rgb(197 202 211 / 0.9) 50%,
+      rgb(61 65 73 / 0.6) 80%,
+      transparent 100%
+    );
+  }
+
+  .heading-hero {
+    font-family: var(--font-serif);
+    font-size: clamp(2rem, 6.5vw, 4.5rem);
+    line-height: 1.05;
+    letter-spacing: -0.04em;
+  }
+
+  .heading-section {
+    font-family: var(--font-serif);
+    font-size: clamp(1.75rem, 4vw, 3rem);
+    line-height: 1.15;
+    letter-spacing: -0.03em;
+  }
+}
+
+@layer utilities {
+  .mask-fade-b {
+    mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
+  }
+
+  .perspective-1000 {
+    perspective: 1000px;
+  }
+
+  .preserve-3d {
+    transform-style: preserve-3d;
+  }
+
+  .safe-pb {
+    padding-bottom: max(1rem, var(--safe-bottom));
+  }
+
+  .touch-pan-x {
+    touch-action: pan-x;
+  }
+}
+
+
+
+.page-enter {
+  opacity: 0;
+  transform: translateY(12px);
+}
+.page-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.page-exit {
+  opacity: 1;
+}
+.page-exit-active {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+/*
+ * Light theme — cool gray palette (mist / slate / silver).
+ * Unlayered so these beat Tailwind utilities.
+ */
+html.light body {
+  color: #1a1d22;
+  background-color: #e8eaee;
+  background-image:
+    radial-gradient(ellipse 90% 50% at 50% -10%, rgb(197 202 211 / 0.55) 0%, transparent 55%),
+    radial-gradient(ellipse 45% 40% at 100% 70%, rgb(232 234 238 / 0.9) 0%, transparent 50%),
+    radial-gradient(ellipse 40% 35% at 0% 50%, rgb(180 185 194 / 0.35) 0%, transparent 45%),
+    linear-gradient(180deg, #eef0f3 0%, #e4e6ea 45%, #dde1e7 100%);
+}
+
+html.light ::selection {
+  background-color: rgb(107 114 128 / 0.28);
+  color: #1a1d22;
+}
+
+html.light ::-webkit-scrollbar-track {
+  background: #e4e6ea;
+}
+
+html.light ::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #5c6570, #9aa1ad);
+}
+
+html.light .glass {
+  background: linear-gradient(
+    145deg,
+    rgb(255 255 255 / 0.78) 0%,
+    rgb(232 234 238 / 0.92) 55%,
+    rgb(197 202 211 / 0.28) 100%
+  );
+  border: 1px solid rgb(107 114 128 / 0.18);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.8),
+    0 8px 28px rgb(61 65 73 / 0.06);
+}
+
+html.light .glass-strong {
+  background: linear-gradient(160deg, #fafbfc 0%, #eef0f3 100%);
+  border: 1px solid rgb(107 114 128 / 0.16);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.95),
+    0 24px 48px rgb(61 65 73 / 0.08);
+}
+
+html.light .btn-primary {
+  color: #f0f1f3;
+  background-image: linear-gradient(120deg, #3d4149 0%, #5c6570 40%, #2a2d33 100%);
+  box-shadow:
+    0 0 0 1px rgb(61 65 73 / 0.25),
+    0 8px 28px rgb(61 65 73 / 0.16),
+    inset 0 1px 0 rgb(232 234 238 / 0.18);
+}
+
+html.light .btn-primary:hover {
+  background-image: linear-gradient(120deg, #4a505a 0%, #6b7280 42%, #3d4149 100%);
+}
+
+html.light .btn-outline {
+  color: #3d4149;
+  border: 1px solid rgb(107 114 128 / 0.4);
+  background: rgb(255 255 255 / 0.55);
+}
+
+html.light .btn-outline:hover {
+  color: #1a1d22;
+  border-color: #5c6570;
+  background: rgb(232 234 238 / 0.85);
+}
+
+html.light .label-premium {
+  color: #5c6570;
+}
+
+html.light .label-premium::before {
+  background: linear-gradient(90deg, #9aa1ad, transparent);
+}
+
+/* Headings / body — ink slate (not pure black) */
+html.light .text-cream,
+html.light .heading-display,
+html.light .heading-hero,
+html.light .heading-section {
+  color: #1a1d22;
+}
+
+html.light .text-cream\/90 {
+  color: rgb(26 29 34 / 0.9);
+}
+
+html.light .text-cream\/80 {
+  color: rgb(42 45 51 / 0.88);
+}
+
+html.light .text-cream\/70 {
+  color: rgb(61 65 73 / 0.88);
+}
+
+html.light .text-cream\/60 {
+  color: rgb(61 65 73 / 0.78);
+}
+
+html.light .text-cream\/55 {
+  color: rgb(92 101 112 / 0.9);
+}
+
+html.light .text-cream\/50 {
+  color: rgb(92 101 112 / 0.85);
+}
+
+html.light .text-cream\/45 {
+  color: rgb(107 114 128 / 0.88);
+}
+
+html.light .text-cream\/40 {
+  color: rgb(107 114 128 / 0.8);
+}
+
+html.light .text-cream\/35 {
+  color: rgb(122 132 144 / 0.85);
+}
+
+html.light .text-cream\/30 {
+  color: rgb(122 132 144 / 0.75);
+}
+
+html.light .text-cream\/25 {
+  color: rgb(154 161 173 / 0.85);
+}
+
+html.light .text-cream\/20 {
+  color: rgb(154 161 173 / 0.7);
+}
+
+/* Accents: mid slate + silver */
+html.light .text-silver {
+  color: #4a5560;
+}
+
+html.light .text-silver\/90,
+html.light .text-silver\/80,
+html.light .text-silver\/60,
+html.light .text-silver\/50,
+html.light .text-silver\/40,
+html.light .text-silver\/30 {
+  color: rgb(74 85 96 / 0.9);
+}
+
+html.light .text-silver-light {
+  color: #2f343c;
+}
+
+html.light .text-graphite {
+  color: #5c6570;
+}
+
+html.light .text-graphite-light {
+  color: #7a8490;
+}
+
+html.light .hover\:text-silver:hover,
+html.light .hover\:text-cream:hover {
+  color: #3d4149;
+}
+
+html.light .group:hover .group-hover\:text-silver {
+  color: #3d4149;
+}
+
+html.light .text-royal {
+  background-image: linear-gradient(135deg, #2a2d33 0%, #5c6570 40%, #9aa1ad 78%, #c5cad3 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+html.light .bg-charcoal {
+  background-color: #e8eaee;
+}
+
+html.light .bg-charcoal-100 {
+  background-color: #eef0f3;
+}
+
+html.light .bg-charcoal-50 {
+  background-color: #dde1e7;
+}
+
+/* Soft gray canvas around framed sections (not pure white) */
+html.light .frame-section,
+html.light .nova-hero {
+  background-color: #e8eaee !important;
+  background-image:
+    linear-gradient(180deg, #eef0f3 0%, #e8eaee 55%, #e2e5ea 100%);
+}
+
+html.light .rule-silver {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgb(154 161 173 / 0.45) 20%,
+    rgb(107 114 128 / 0.75) 50%,
+    rgb(154 161 173 / 0.45) 80%,
+    transparent 100%
+  );
+}
+
+html.light .border-white\/5 {
+  border-color: rgb(107 114 128 / 0.16);
+}
+
+html.light .border-white\/10 {
+  border-color: rgb(107 114 128 / 0.22);
+}
+
+html.light .border-white\/15 {
+  border-color: rgb(107 114 128 / 0.28);
+}
+
+html.light .placeholder\:text-cream\/30::placeholder {
+  color: rgb(107 114 128 / 0.55);
+}
+
+html.light .bg-white\/5 {
+  background-color: rgb(107 114 128 / 0.08);
+}

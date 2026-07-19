@@ -1,0 +1,160 @@
+/* Lumina brand wordmark — clean, no stripe lines */
+
+.lumina-brand {
+  position: relative;
+  z-index: 3;
+  pointer-events: none;
+  user-select: none;
+}
+
+.lumina-brand--open {
+  position: absolute;
+  left: 50%;
+  /* Mobile: sit mid-upper so shorter hero doesn’t look empty */
+  top: 42%;
+  transform: translate(-50%, -50%);
+  width: min(94%, 640px);
+  max-width: 100%;
+  padding: 0.65rem 0.5rem 0.5rem;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+}
+
+.lumina-brand--card {
+  width: 100%;
+  max-width: 620px;
+  height: 300px;
+  margin-inline: auto;
+  border-radius: 1.5rem;
+  overflow: hidden;
+  border: 1px solid rgb(255 255 255 / 0.1);
+  background: #121316;
+}
+
+html.light .lumina-brand--card {
+  background: #e8eaee;
+  border-color: rgb(107 114 128 / 0.2);
+}
+
+.lumina-brand__dots {
+  position: absolute;
+  inset: 0;
+  opacity: 0.4;
+  pointer-events: none;
+  background-image: radial-gradient(circle at center, rgb(255 255 255 / 0.06) 1px, transparent 1px);
+  background-size: 7px 7px;
+}
+
+.lumina-brand__inner {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  min-height: clamp(5.5rem, 18vw, 10rem);
+  padding: 0 0.75rem;
+}
+
+.lumina-brand--card .lumina-brand__inner {
+  min-height: 300px;
+  padding: 0 2.5rem;
+}
+
+.lumina-brand__word-wrap {
+  position: relative;
+  width: 100%;
+  max-width: 540px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.lumina-brand__word {
+  margin: 0;
+  font-family: var(--font-serif), 'Playfair Display', Georgia, serif;
+  font-weight: 600;
+  font-size: clamp(2.35rem, 11vw, 5.75rem);
+  letter-spacing: -0.025em;
+  line-height: 1;
+  text-transform: uppercase;
+  background: linear-gradient(180deg, #f0f1f3 0%, #c5cad3 50%, #e8eaee 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+html.light .lumina-brand__word {
+  background: linear-gradient(180deg, #1a1d22 0%, #3d4149 45%, #6b7280 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+.lumina-brand__tag {
+  margin-top: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  z-index: 20;
+}
+
+.lumina-brand__rule {
+  height: 1px;
+  width: 1.75rem;
+  background: rgb(255 255 255 / 0.28);
+}
+
+html.light .lumina-brand__rule {
+  background: rgb(61 65 73 / 0.28);
+}
+
+.lumina-brand__tag-text {
+  font-size: 0.58rem;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgb(240 241 243 / 0.55);
+  white-space: nowrap;
+}
+
+html.light .lumina-brand__tag-text {
+  color: rgb(61 65 73 / 0.55);
+}
+
+@media (max-width: 479px) {
+  .lumina-brand--open {
+    top: 40%;
+    width: 96%;
+    padding: 0.4rem 0.25rem;
+  }
+
+  .lumina-brand__tag {
+    margin-top: 0.4rem;
+  }
+
+  .lumina-brand__tag-text {
+    font-size: 0.5rem;
+    letter-spacing: 0.14em;
+  }
+
+  .lumina-brand__rule {
+    width: 1rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .lumina-brand--open {
+    top: 34%;
+    padding: 1.25rem 0.5rem 1rem;
+  }
+
+  .lumina-brand__word {
+    font-size: clamp(2.75rem, 12vw, 5.75rem);
+  }
+
+  .lumina-brand__inner {
+    min-height: clamp(8rem, 24vw, 12rem);
+  }
+}

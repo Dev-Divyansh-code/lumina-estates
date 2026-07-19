@@ -1,0 +1,323 @@
+/* Interactive 3×3 photo mosaic — mobile-first, expand on desktop hover */
+
+.hover-mosaic {
+  width: 100%;
+  max-width: 100%;
+  margin-inline: auto;
+  container-type: inline-size;
+}
+
+.hover-mosaic__shell {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.45rem;
+  width: 100%;
+  /* Square mosaic that fits the screen */
+  aspect-ratio: 1 / 1;
+  max-height: min(92vw, 520px);
+  margin-inline: auto;
+  padding: 0;
+  border-radius: 0.75rem;
+  transition: grid-template-columns 0.5s ease-in-out;
+}
+
+/* Soft glow behind grid */
+.hover-mosaic__shell::before {
+  content: '';
+  position: absolute;
+  inset: -4%;
+  border-radius: 1rem;
+  background: rgb(255 255 255 / 0.06);
+  filter: blur(48px);
+  pointer-events: none;
+  z-index: 0;
+  transition: background 0.45s ease;
+}
+
+html.light .hover-mosaic__shell::before {
+  background: rgb(107 114 128 / 0.1);
+}
+
+.hover-mosaic__col {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-rows: repeat(3, minmax(0, 1fr));
+  gap: 0.45rem;
+  min-width: 0;
+  min-height: 0;
+  height: 100%;
+  transition: grid-template-rows 0.5s ease-in-out;
+}
+
+.hover-mosaic__link {
+  display: block;
+  min-width: 0;
+  min-height: 0;
+  height: 100%;
+  text-decoration: none;
+  color: inherit;
+  /* Comfortable tap target without breaking grid */
+  -webkit-tap-highlight-color: transparent;
+}
+
+.hover-mosaic__cell {
+  position: relative;
+  overflow: hidden;
+  border-radius: 0.5rem;
+  height: 100%;
+  min-height: 0;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgb(0 0 0 / 0.28);
+  background: #121316;
+}
+
+html.light .hover-mosaic__cell {
+  box-shadow: 0 6px 18px rgb(61 65 73 / 0.12);
+  background: #dde1e7;
+}
+
+.hover-mosaic__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.45s ease, filter 0.45s ease;
+  filter: saturate(0.9) brightness(1);
+  transform: scale(1);
+}
+
+/* Brand center cell */
+.hover-mosaic__img--brand-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: brightness(0.35) contrast(1.2) saturate(0.15) !important;
+  transform: scale(1.05) !important;
+}
+
+.hover-mosaic__brand {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.1rem;
+  padding: 0.35rem;
+  color: #f0f1f3;
+  text-align: center;
+  pointer-events: none;
+}
+
+.hover-mosaic__brand-mark {
+  display: flex;
+  margin-bottom: 0.15rem;
+  color: #c5cad3;
+}
+
+.hover-mosaic__brand-mark svg {
+  width: 18px;
+  height: 18px;
+}
+
+.hover-mosaic__brand-name {
+  font-family: var(--font-serif), Georgia, serif;
+  font-size: clamp(0.7rem, 3.8vw, 1.1rem);
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+.hover-mosaic__brand-sub {
+  font-size: clamp(0.4rem, 1.8vw, 0.55rem);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgb(197 202 211 / 0.75);
+}
+
+/* Touch: light press feedback (no expand) */
+@media (hover: none) {
+  .hover-mosaic__cell:active .hover-mosaic__img:not(.hover-mosaic__img--brand-bg) {
+    transform: scale(1.04);
+    filter: saturate(1) brightness(1.05);
+  }
+
+  .hover-mosaic__cell--brand:active .hover-mosaic__img--brand-bg {
+    filter: brightness(0.45) contrast(1.15) saturate(0.25) !important;
+  }
+}
+
+/* Small phones: slightly tighter, still full-width 3×3 */
+@media (max-width: 379px) {
+  .hover-mosaic__shell {
+    gap: 0.35rem;
+    max-height: min(94vw, 380px);
+    border-radius: 0.65rem;
+  }
+
+  .hover-mosaic__col {
+    gap: 0.35rem;
+  }
+
+  .hover-mosaic__cell {
+    border-radius: 0.4rem;
+  }
+
+  .hover-mosaic__brand-mark {
+    display: none;
+  }
+}
+
+/* Larger phones / small tablets */
+@media (min-width: 480px) and (max-width: 767px) {
+  .hover-mosaic__shell {
+    gap: 0.55rem;
+    max-height: min(88vw, 560px);
+  }
+
+  .hover-mosaic__col {
+    gap: 0.55rem;
+  }
+
+  .hover-mosaic__cell {
+    border-radius: 0.6rem;
+  }
+
+  .hover-mosaic__brand-mark svg {
+    width: 22px;
+    height: 22px;
+  }
+
+  .hover-mosaic__brand-name {
+    font-size: clamp(0.95rem, 3.2vw, 1.35rem);
+  }
+}
+
+/*
+ * Desktop / fine pointer: container-query expand + dim siblings
+ * Only when hover is available so touch devices stay a stable grid
+ */
+@media (min-width: 768px) {
+  .hover-mosaic {
+    width: min(100%, 70vmin);
+  }
+
+  .hover-mosaic__shell {
+    gap: 0.75rem;
+    padding: 0.65rem 0 0 0.65rem;
+    max-height: none;
+    aspect-ratio: auto;
+    height: 94cqmin;
+    min-height: min(94cqmin, 780px);
+    border-radius: 0.9rem;
+  }
+
+  .hover-mosaic__col {
+    gap: 0.75rem;
+  }
+
+  .hover-mosaic__cell {
+    border-radius: 0.75rem;
+    box-shadow: 0 16px 40px rgb(0 0 0 / 0.28);
+  }
+
+  .hover-mosaic__brand-mark svg {
+    width: 28px;
+    height: 28px;
+  }
+
+  .hover-mosaic__brand-name {
+    font-size: clamp(1.1rem, 4cqmin, 1.65rem);
+  }
+
+  .hover-mosaic__brand-sub {
+    font-size: 0.55rem;
+    letter-spacing: 0.28em;
+  }
+}
+
+@media (min-width: 768px) and (hover: hover) and (pointer: fine) {
+  .hover-mosaic__shell {
+    grid-template-columns: 30cqmin 30cqmin 30cqmin;
+  }
+
+  .hover-mosaic__shell:has(> .hover-mosaic__col:nth-child(1):hover) {
+    grid-template-columns: 60cqmin 15cqmin 15cqmin;
+  }
+
+  .hover-mosaic__shell:has(> .hover-mosaic__col:nth-child(2):hover) {
+    grid-template-columns: 15cqmin 60cqmin 15cqmin;
+  }
+
+  .hover-mosaic__shell:has(> .hover-mosaic__col:nth-child(3):hover) {
+    grid-template-columns: 15cqmin 15cqmin 60cqmin;
+  }
+
+  .hover-mosaic__col {
+    grid-template-rows: 30cqmin 30cqmin 30cqmin;
+  }
+
+  .hover-mosaic__col:has(> :nth-child(1):hover) {
+    grid-template-rows: 60cqmin 15cqmin 15cqmin;
+  }
+
+  .hover-mosaic__col:has(> :nth-child(2):hover) {
+    grid-template-rows: 15cqmin 60cqmin 15cqmin;
+  }
+
+  .hover-mosaic__col:has(> :nth-child(3):hover) {
+    grid-template-rows: 15cqmin 15cqmin 60cqmin;
+  }
+
+  .hover-mosaic__shell:hover::before {
+    background: rgb(255 255 255 / 0.03);
+  }
+
+  html.light .hover-mosaic__shell:hover::before {
+    background: rgb(107 114 128 / 0.05);
+  }
+
+  .hover-mosaic__shell:hover .hover-mosaic__img:not(.hover-mosaic__img--brand-bg) {
+    filter: blur(0.5px) brightness(0.5) contrast(1.15) saturate(0);
+  }
+
+  .hover-mosaic__shell:hover .hover-mosaic__cell:hover .hover-mosaic__img:not(.hover-mosaic__img--brand-bg) {
+    filter: blur(0) brightness(1) contrast(1.08) saturate(1);
+    transform: scale(1.12);
+  }
+
+  .hover-mosaic__shell:hover .hover-mosaic__cell--brand:hover .hover-mosaic__img--brand-bg {
+    filter: brightness(0.42) contrast(1.15) saturate(0.25) !important;
+  }
+}
+
+/* Tablet landscape without fine hover: equal 3×3, full width */
+@media (min-width: 768px) and (hover: none) {
+  .hover-mosaic {
+    width: min(100%, 640px);
+  }
+
+  .hover-mosaic__shell {
+    aspect-ratio: 1 / 1;
+    height: auto;
+    min-height: 0;
+    max-height: min(80vh, 640px);
+    padding: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hover-mosaic__shell,
+  .hover-mosaic__col,
+  .hover-mosaic__img {
+    transition: none;
+  }
+
+  .hover-mosaic__shell:hover .hover-mosaic__cell:hover .hover-mosaic__img {
+    transform: none;
+  }
+}
